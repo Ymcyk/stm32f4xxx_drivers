@@ -24,23 +24,24 @@ int main(void)
 
     gpioButton.pGPIOx = GPIOC;
     gpioButton.pinConfig.GPIO_PinNumber = BUTTON_PIN_NUM;
-    gpioButton.pinConfig.GPIO_PinMode = GPIO_MODER_INPUT;
+    gpioButton.pinConfig.GPIO_PinMode = GPIO_MODER_IT_FT;
     gpioButton.pinConfig.GPIO_PinPuPdControl = GPIO_PUPDR_NO;
 
     GPIO_PeriClockControl(GPIOC, 0x01);
     GPIO_Init(&gpioButton);
 
-	for(;;) {
-	    if (!(GPIO_ReadFromInputPin(gpioButton.pGPIOx, gpioButton.pinConfig.GPIO_PinNumber))) {
-	        GPIO_WriteToOutputPin(gpioLed.pGPIOx, gpioLed.pinConfig.GPIO_PinNumber, 0x01);
-	    } else {
-	        GPIO_WriteToOutputPin(gpioLed.pGPIOx, gpioLed.pinConfig.GPIO_PinNumber, 0x00);
-	    }
+    GPIO_IRQInterruptConfig(40, 0x01);
 
-	    delay();
-	}
+	for(;;);
 }
 
 void delay(void) {
     for (int i = 0; i < 500000; i++);
+}
+
+void EXTI15_10_IRQHandler(void) {
+	GPIO_IRQHandling(BUTTON_PIN_NUM);
+
+	GPIO_ToggleOutputPin(GPIOA, LED_PIN_NUM);
+	delay();
 }

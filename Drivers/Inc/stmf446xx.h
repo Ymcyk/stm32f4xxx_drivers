@@ -182,7 +182,7 @@ typedef struct {
 #define GPIOF_PCLK_EN()         (GPIOx_PCLK_EN(5))
 #define GPIOG_PCLK_EN()         (GPIOx_PCLK_EN(6))
 #define GPIOH_PCLK_EN()         (GPIOx_PCLK_EN(7))
-#define SYSCFG_PCLK_EN()        (RCC->APB2 |= (1 << 14))
+#define SYSCFG_PCLK_EN()        (RCC->APB2ENR |= (1 << 14))
 
 /*
  * Clock disable macros

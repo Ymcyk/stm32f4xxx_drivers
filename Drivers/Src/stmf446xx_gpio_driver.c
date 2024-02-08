@@ -65,6 +65,8 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
             EXTI->EXTI_RTSR |= (1 << pinNumber);
         }
 
+        SYSCFG_PCLK_EN();
+
         // 2. SYSCFG: Port selection - GPIOx <- x
         const uint8_t extiRegIndex = pinNumber / 4;
         const uint8_t extiBitShift = pinNumber % 4;
@@ -144,7 +146,7 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber) {
     pGPIOx->ODR ^= (1 << pinNumber);
 }
 
-void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t enable) {
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t enable) {
     if (enable) {
         if (IRQNumber < 32) {
             // ISER0
@@ -180,7 +182,9 @@ void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority) {
 }
 
 void GPIO_IRQHandling(uint8_t pinNumber) {
-
+	if (EXTI->EXTI_PR & (0x01 << pinNumber)) {
+		EXTI->EXTI_PR |= (0x01 << pinNumber);
+	}
 }
 
 static uint8_t GPIO_PortIndex(GPIO_RegDef_t *pGPIOx) {
