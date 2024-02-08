@@ -1,7 +1,23 @@
-#ifndef STMF446XX_H_
-#define STMF446XX_H_
+#pragma once
 
 #include <stdint.h>
+
+/*
+ * Cortex-M4 specific registers
+ */
+#define NVIC_ISER0              ((volatile uint32_t*)0xE000E100)
+#define NVIC_ISER1              ((volatile uint32_t*)0xE000E104)
+#define NVIC_ISER2              ((volatile uint32_t*)0xE000E108)
+#define NVIC_ISER4              ((volatile uint32_t*)0xE000E10C)
+
+#define NVIC_ICER0              ((volatile uint32_t*)0XE000E180)
+#define NVIC_ICER1              ((volatile uint32_t*)0xE000E184)
+#define NVIC_ICER2              ((volatile uint32_t*)0xE000E188)
+#define NVIC_ICER4              ((volatile uint32_t*)0xE000E18C)
+
+#define NVIC_IPR_BASE_ADDR      ((volatile uint32_t*)0xE000E400)
+
+#define NO_PR_BITS_NOT_IMPLEMENTED      4
 
 /*
  * Flash and SRAM memories
@@ -119,6 +135,23 @@ typedef struct {
     volatile uint32_t DCKCFGR2;
 } RCC_RegDef_t;
 
+typedef struct {
+    volatile uint32_t EXTI_IMR;
+    volatile uint32_t EXTI_EMR;
+    volatile uint32_t EXTI_RTSR;
+    volatile uint32_t EXTI_FTSR;
+    volatile uint32_t EXTI_SWIER;
+    volatile uint32_t EXTI_PR;
+} EXTI_RegDef_t;
+
+typedef struct {
+    volatile uint32_t SYSCFG_MEMRMP;
+    volatile uint32_t SYSCFG_PMC;
+    volatile uint32_t SYSCFG_EXTI[4];
+    volatile uint32_t SYSCFG_CMPCR;
+    volatile uint32_t SYSCFG_CFGR;
+} SYSCFG_RegDef_t;
+
 /*
  * Peripherals definitions
  */
@@ -132,6 +165,8 @@ typedef struct {
 #define GPIOG                   ((GPIO_RegDef_t*) GPIOG_BASE_ADDR)
 #define GPIOH                   ((GPIO_RegDef_t*) GPIOH_BASE_ADDR)
 #define RCC                     ((RCC_RegDef_t*) RCC_BASE_ADDR)
+#define EXTI                    ((EXTI_RegDef_t*) EXTI_BASE_ADDR)
+#define SYSCFG                  ((SYSCFG_RegDef_t*) SYSCFG_BASE_ADDR)
 
 /*
  * Clock enable macros
@@ -147,6 +182,7 @@ typedef struct {
 #define GPIOF_PCLK_EN()         (GPIOx_PCLK_EN(5))
 #define GPIOG_PCLK_EN()         (GPIOx_PCLK_EN(6))
 #define GPIOH_PCLK_EN()         (GPIOx_PCLK_EN(7))
+#define SYSCFG_PCLK_EN()        (RCC->APB2 |= (1 << 14))
 
 /*
  * Clock disable macros
@@ -162,5 +198,27 @@ typedef struct {
 #define GPIOF_PCLK_DI()         (GPIOx_PCLK_DI(5))
 #define GPIOG_PCLK_DI()         (GPIOx_PCLK_DI(6))
 #define GPIOH_PCLK_DI()         (GPIOx_PCLK_DI(7))
+#define SYSCFG_PCLK_DI()        (RCC->APB2 &= ~(1 << 14))
 
-#endif
+/*
+ * Macros to reset GPIOx peripherals
+ */
+#define GPIOx_REG_RESET(SHIFT)  do { RCC->AHB1RSTR |= (1 << SHIFT); RCC->AHB1RSTR &= ~(1 << SHIFT); } while(0)
+
+#define GPIOA_REG_RESET()       GPIOx_REG_RESET(0)
+#define GPIOB_REG_RESET()       GPIOx_REG_RESET(1)
+#define GPIOC_REG_RESET()       GPIOx_REG_RESET(2)
+#define GPIOD_REG_RESET()       GPIOx_REG_RESET(3)
+#define GPIOE_REG_RESET()       GPIOx_REG_RESET(4)
+#define GPIOF_REG_RESET()       GPIOx_REG_RESET(5)
+#define GPIOG_REG_RESET()       GPIOx_REG_RESET(6)
+#define GPIOH_REG_RESET()       GPIOx_REG_RESET(7)
+
+#define IRQ_NO_EXTI0            6
+#define IRQ_NO_EXTI1            7
+#define IRQ_NO_EXTI2            8
+#define IRQ_NO_EXTI3            9
+#define IRQ_NO_EXTI4            10
+#define IRQ_NO_EXTI9_5          23
+#define IRQ_NO_EXTI15_10        40
+
