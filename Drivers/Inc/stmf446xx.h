@@ -152,6 +152,18 @@ typedef struct {
     volatile uint32_t SYSCFG_CFGR;
 } SYSCFG_RegDef_t;
 
+typedef struct {
+    volatile uint32_t SPI_CR1;
+    volatile uint32_t SPI_CR2;
+    volatile uint32_t SPI_SR;
+    volatile uint32_t SPI_DR;
+    volatile uint32_t SPI_CRCPR;
+    volatile uint32_t SPI_RXCRCR;
+    volatile uint32_t SPI_TXCRCR;
+    volatile uint32_t SPI_I2SCFGR;
+    volatile uint32_t SPI_I2SPR;
+} SPI_RegDef_t;
+
 /*
  * Peripherals definitions
  */
@@ -167,6 +179,10 @@ typedef struct {
 #define RCC                     ((RCC_RegDef_t*) RCC_BASE_ADDR)
 #define EXTI                    ((EXTI_RegDef_t*) EXTI_BASE_ADDR)
 #define SYSCFG                  ((SYSCFG_RegDef_t*) SYSCFG_BASE_ADDR)
+#define SPI1                    ((SPI_RegDef_t*) SPI1_BASE_ADDR)
+#define SPI2                    ((SPI_RegDef_t*) SPI2_BASE_ADDR)
+#define SPI3                    ((SPI_RegDef_t*) SPI3_BASE_ADDR)
+#define SPI4                    ((SPI_RegDef_t*) SPI4_BASE_ADDR)
 
 /*
  * Clock enable macros
@@ -183,6 +199,10 @@ typedef struct {
 #define GPIOG_PCLK_EN()         (GPIOx_PCLK_EN(6))
 #define GPIOH_PCLK_EN()         (GPIOx_PCLK_EN(7))
 #define SYSCFG_PCLK_EN()        (RCC->APB2ENR |= (1 << 14))
+#define SPI1_PCLK_EN()          (RCC->APB2ENR |= (1 << 12))
+#define SPI2_PCLK_EN()          (RCC->APB1ENR |= (1 << 14))
+#define SPI3_PCLK_EN()          (RCC->APB1ENR |= (1 << 15))
+#define SPI4_PCLK_EN()          (RCC->APB2ENR |= (1 << 13))
 
 /*
  * Clock disable macros
@@ -199,6 +219,10 @@ typedef struct {
 #define GPIOG_PCLK_DI()         (GPIOx_PCLK_DI(6))
 #define GPIOH_PCLK_DI()         (GPIOx_PCLK_DI(7))
 #define SYSCFG_PCLK_DI()        (RCC->APB2 &= ~(1 << 14))
+#define SPI1_PCLK_DI()          (RCC->APB2ENR &= ~(1 << 12))
+#define SPI2_PCLK_DI()          (RCC->APB1ENR &= ~(1 << 14))
+#define SPI3_PCLK_DI()          (RCC->APB1ENR &= ~(1 << 15))
+#define SPI4_PCLK_DI()          (RCC->APB2ENR &= ~(1 << 13))
 
 /*
  * Macros to reset GPIOx peripherals
