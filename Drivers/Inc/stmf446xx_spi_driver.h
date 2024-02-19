@@ -11,12 +11,41 @@ typedef struct {
     uint8_t SPI_CPOL;
     uint8_t SPI_CPHA;
     uint8_t SPI_SSM;
-} SPT_Config_t;
+} SPI_Config_t;
 
 typedef struct {
     SPI_RegDef_t *pSPIx;
-    SPT_Config_t SPIConfig;
+    SPI_Config_t SPIConfig;
 } SPI_Handle_t;
+
+#define SPI_DEVICE_MODE_SLAVE       0
+#define SPI_DEVICE_MODE_MASTER      1
+
+#define SPI_BUS_CONFIG_FULL_DUPLEX  0
+#define SPI_BUS_CONFIG_HALF_DUPLEX  1
+#define SPI_BUS_CONFIG_SIMPLEX_TX   2
+#define SPI_BUS_CONFIG_SIMPLEX_RX   3
+
+#define SPI_SCLK_SPEED_DIV_2        0
+#define SPI_SCLK_SPEED_DIV_4        1
+#define SPI_SCLK_SPEED_DIV_8        2
+#define SPI_SCLK_SPEED_DIV_16       3
+#define SPI_SCLK_SPEED_DIV_32       4
+#define SPI_SCLK_SPEED_DIV_64       5
+#define SPI_SCLK_SPEED_DIV_128      6
+#define SPI_SCLK_SPEED_DIV_256      7
+
+#define SPI_DFF_8                   0
+#define SPI_DFF_16                  1
+
+#define SPI_CPOL_LOW                0
+#define SPI_CPOL_HIGH               1
+
+#define SPI_CPHA_FIRST              0
+#define SPI_CPHA_SECOND             1
+
+#define SPI_SSM_DISABLED            0
+#define SPI_SSM_ENABLED             1
 
 void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t enable);
 
